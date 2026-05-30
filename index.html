@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nigerian army college of environmental science and technology Gym Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --surface3: #222222;
+    --border: #2a2a2a;
+    --accent: #e8ff00;
+    --accent2: #ff4d00;
+    --accent3: #00d4ff;
+    --text: #f0f0f0;
+    --text-muted: #666;
+    --text-dim: #999;
+    --success: #00e676;
+    --warning: #ffab00;
+    --danger: #ff1744;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 4px;
+    --radius-lg: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 30px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .logo-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .nav { padding: 16px 0; flex: 1; }
+  .nav-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 12px 20px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ─── MAIN ─── */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    height: 60px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .btn {
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #d4eb00; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #cc1436; }
+  .btn-success { background: var(--success); color: #000; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  .content { padding: 28px; flex: 1; }
+
+  /* ─── SECTION PAGES ─── */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── STATS GRID ─── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-sub { font-size: 12px; color: var(--text-dim); margin-top: 6px; }
+  .stat-icon {
+    position: absolute;
+    right: 16px; top: 16px;
+    font-size: 28px;
+    opacity: 0.15;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  /* ─── TABLE ─── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); color: var(--text); }
+
+  /* ─── BADGE ─── */
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-active { background: rgba(0,230,118,0.15); color: var(--success); }
+  .badge-expired { background: rgba(255,23,68,0.15); color: var(--danger); }
+  .badge-pending { background: rgba(255,171,0,0.15); color: var(--warning); }
+  .badge-suspended { background: rgba(153,153,153,0.15); color: var(--text-muted); }
+  .badge-monthly { background: rgba(0,212,255,0.15); color: var(--accent3); }
+  .badge-yearly { background: rgba(232,255,0,0.15); color: var(--accent); }
+  .badge-weekly { background: rgba(255,77,0,0.15); color: var(--accent2); }
+  .badge-shipped { background: rgba(0,212,255,0.15); color: var(--accent3); }
+  .badge-delivered { background: rgba(0,230,118,0.15); color: var(--success); }
+
+  /* ─── SEARCH ─── */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    width: 260px;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--accent); }
+  .search-bar input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    width: 100%;
+  }
+  .search-bar input::placeholder { color: var(--text-muted); }
+
+  /* ─── FORM ─── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1/-1; }
+  label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  select option { background: var(--surface2); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-family: var(--font-display); font-size: 20px; letter-spacing: 1px; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: var(--danger); }
+  .modal-body { padding: 24px; }
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── ALERT BANNER ─── */
+  .alert {
+    display: none;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    margin-bottom: 16px;
+    border-left: 3px solid;
+    animation: fadeIn 0.2s ease;
+  }
+  .alert.show { display: flex; align-items: center; gap: 10px; }
+  .alert-success { background: rgba(0,230,118,0.08); color: var(--success); border-color: var(--success); }
+  .alert-error { background: rgba(255,23,68,0.08); color: var(--danger); border-color: var(--danger); }
+
+  /* ─── DASHBOARD ─── */
+  .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .activity-text { font-size: 13px; color: var(--text-dim); flex: 1; }
+  .activity-time { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap { margin-bottom: 14px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 1s ease;
+  }
+
+  /* ─── EQUIPMENT GRID ─── */
+  .equip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .equip-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .equip-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .equip-icon { font-size: 32px; margin-bottom: 10px; }
+  .equip-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .equip-detail { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+
+  /* ─── STORE GRID ─── */
+  .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .product-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .product-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .product-img {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    background: var(--surface3);
+  }
+  .product-body { padding: 14px; }
+  .product-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .product-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-family: var(--font-mono); font-size: 15px; color: var(--accent); font-weight: 600; }
+  .product-stock { font-size: 11px; color: var(--text-muted); }
+
+  /* ─── SECURITY PAGE ─── */
+  .security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .role-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .role-row:last-child { border-bottom: none; }
+  .role-name { font-weight: 600; font-size: 13px; }
+  .role-perms { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .log-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 12px;
+  }
+  .log-time { font-family: var(--font-mono); color: var(--text-muted); white-space: nowrap; }
+  .log-event { color: var(--text-dim); }
+  .log-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .equip-grid, .store-grid { grid-template-columns: 1fr 1fr; }
+    .security-grid { grid-template-columns: 1fr; }
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 16px;
+  }
+  @media (max-width: 900px) { .menu-toggle { display: block; } }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-text">NASME GYM</div>
+    <div class="logo-sub">Management System</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" onclick="navigate('dashboard', this)">
+      <span class="nav-icon">⚡</span> Dashboard
+    </div>
+    <div class="nav-section-label">Modules</div>
+    <div class="nav-item" onclick="navigate('members', this)">
+      <span class="nav-icon">👥</span> Member Management
+    </div>
+    <div class="nav-item" onclick="navigate('payments', this)">
+      <span class="nav-icon">💳</span> Payments & Subscriptions
+    </div>
+    <div class="nav-item" onclick="navigate('security', this)">
+      <span class="nav-icon">🔐</span> Data & Security
+    </div>
+    <div class="nav-item" onclick="navigate('equipment', this)">
+      <span class="nav-icon">🏋️</span> Equipment Management
+    </div>
+    <div class="nav-item" onclick="navigate('store', this)">
+      <span class="nav-icon">🛒</span> Online Gym Store
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <span class="status-dot"></span> SYSTEM ONLINE<br>
+    v1.0.0 &nbsp;·&nbsp; IronCore GMS
+  </div>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <div class="page-title" id="pageTitle">DASHBOARD</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search..." id="globalSearch" oninput="handleSearch()" />
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="showCurrentModal()">+ New</button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ALERT -->
+    <div class="alert" id="alert"></div>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Members</div>
+          <div class="stat-value" id="dash-members">247</div>
+          <div class="stat-sub">↑ 12 this month</div>
+          <div class="stat-icon">👥</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monthly Revenue</div>
+          <div class="stat-value">₦847K</div>
+          <div class="stat-sub">↑ 8% vs last month</div>
+          <div class="stat-icon">💰</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Equipment Items</div>
+          <div class="stat-value">38</div>
+          <div class="stat-sub">3 under maintenance</div>
+          <div class="stat-icon">🏋️</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Store Orders</div>
+          <div class="stat-value">19</div>
+          <div class="stat-sub">6 pending dispatch</div>
+          <div class="stat-icon">🛒</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Activity</div>
+          </div>
+          <div id="activityFeed">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--success)"></div>
+              <div class="activity-text">New member <strong>Amara Okafor</strong> registered</div>
+              <div class="activity-time">2 min ago</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--accent)"></div>
+              <div class="activity-text">Payment received from <strong>Emeka Eze</strong> — ₦12,000</div>
+              <div class="activity-time">15 min ago</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--warning)"></div>
+              <div class="activity-text">Treadmill #3 scheduled for maintenance</div>
+              <div class="activity-time">1 hr ago</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--accent3)"></div>
+              <div class="activity-text">Store order #ORD-019 dispatched to <strong>Ngozi Adeyemi</strong></div>
+              <div class="activity-time">2 hrs ago</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--danger)"></div>
+              <div class="activity-text">Membership expired — <strong>Tunde Fashola</strong></div>
+              <div class="activity-time">3 hrs ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Plan Distribution</div></div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>Yearly</span><span>42%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:42%;background:var(--accent)"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>Monthly</span><span>35%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:35%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>Weekly</span><span>15%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:15%;background:var(--accent2)"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>Daily</span><span>8%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:8%;background:var(--text-muted)"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Quick Stats</div></div>
+            <div class="role-row">
+              <div><div class="role-name">Active Today</div></div>
+              <div style="font-family:var(--font-mono);color:var(--success)">63</div>
+            </div>
+            <div class="role-row">
+              <div><div class="role-name">Overdue Payments</div></div>
+              <div style="font-family:var(--font-mono);color:var(--danger)">7</div>
+            </div>
+            <div class="role-row">
+              <div><div class="role-name">Low Stock Items</div></div>
+              <div style="font-family:var(--font-mono);color:var(--warning)">4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MEMBER MANAGEMENT ═══ -->
+    <div class="page" id="page-members">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Members</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('member-modal')">+ Add Member</button>
+        </div>
+        <div class="table-wrap">
+          <table id="members-table">
+            <thead>
+              <tr>
+                <th>Member ID</th><th>Full Name</th><th>Plan</th><th>Status</th><th>Check-ins</th><th>Joined</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAYMENTS ═══ -->
+    <div class="page" id="page-payments">
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card">
+          <div class="stat-label">Total Collected</div>
+          <div class="stat-value" style="font-size:30px">₦2.4M</div>
+          <div class="stat-sub">This year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value" style="font-size:30px;color:var(--warning)">₦84K</div>
+          <div class="stat-sub">7 overdue accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Transactions</div>
+          <div class="stat-value" style="font-size:30px">183</div>
+          <div class="stat-sub">All time</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Transaction History</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('payment-modal')">+ Record Payment</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Txn ID</th><th>Member</th><th>Plan</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody id="payments-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECURITY ═══ -->
+    <div class="page" id="page-security">
+      <div class="security-grid">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Role Access Control</div></div>
+          <div class="role-row">
+            <div>
+              <div class="role-name">🔴 Super Admin</div>
+              <div class="role-perms">Full system access · All modules</div>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="role-row">
+            <div>
+              <div class="role-name">🟠 Admin</div>
+              <div class="role-perms">Members, Payments, Reports</div>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="role-row">
+            <div>
+              <div class="role-name">🟡 Staff</div>
+              <div class="role-perms">Check-ins, Class scheduling</div>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="role-row">
+            <div>
+              <div class="role-name">🟢 Member</div>
+              <div class="role-perms">Profile, Store only</div>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Security Status</div></div>
+          <div class="role-row">
+            <div class="role-name">🔒 AES-256 Encryption</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+          <div class="role-row">
+            <div class="role-name">🛡️ TLS/HTTPS</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+          <div class="role-row">
+            <div class="role-name">📱 2FA Authentication</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+          <div class="role-row">
+            <div class="role-name">💾 Auto Daily Backup</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+          <div class="role-row">
+            <div class="role-name">⛔ Account Lockout (5 tries)</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+          <div class="role-row">
+            <div class="role-name">📋 GDPR Compliance</div>
+            <span class="badge badge-active">ON</span>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column:1/-1">
+          <div class="card-header">
+            <div class="card-title">Audit Log</div>
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">All data-modifying actions</span>
+          </div>
+          <div id="audit-log">
+            <div class="log-entry"><div class="log-dot" style="background:var(--success)"></div><div class="log-time">09:42:11</div><div class="log-event">Member MBR-247 created by Admin — Amara Okafor registered</div></div>
+            <div class="log-entry"><div class="log-dot" style="background:var(--accent)"></div><div class="log-time">09:31:05</div><div class="log-event">Payment TXN-183 recorded — ₦12,000 from Emeka Eze (Monthly Plan)</div></div>
+            <div class="log-entry"><div class="log-dot" style="background:var(--accent3)"></div><div class="log-time">08:54:20</div><div class="log-event">Order ORD-019 status updated to Shipped by Staff</div></div>
+            <div class="log-entry"><div class="log-dot" style="background:var(--warning)"></div><div class="log-time">08:20:00</div><div class="log-event">Equipment EQ-08 (Treadmill) maintenance scheduled by Admin</div></div>
+            <div class="log-entry"><div class="log-dot" style="background:var(--danger)"></div><div class="log-time">07:00:01</div><div class="log-event">Auto-backup completed successfully — 14.2MB archived</div></div>
+            <div class="log-entry"><div class="log-dot" style="background:var(--text-muted)"></div><div class="log-time">06:55:14</div><div class="log-event">Failed login attempt detected — IP 197.211.58.x (account locked)</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ EQUIPMENT ═══ -->
+    <div class="page" id="page-equipment">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Equipment Inventory</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('equipment-modal')">+ Add Equipment</button>
+        </div>
+        <div class="equip-grid" id="equip-grid"></div>
+      </div>
+    </div>
+
+    <!-- ═══ STORE ═══ -->
+    <div class="page" id="page-store">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Online Gym Store</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('product-modal')">+ Add Product</button>
+        </div>
+        <div class="store-grid" id="store-grid"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Orders</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>Member</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Add Member Modal -->
+<div class="modal-overlay" id="member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ADD NEW MEMBER</div>
+      <button class="modal-close" onclick="closeModal('member-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="m-name" placeholder="e.g. Amara Okafor"/>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth *</label>
+          <input type="date" id="m-dob"/>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select id="m-gender">
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="text" id="m-phone" placeholder="+234 800 000 0000"/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="m-email" placeholder="email@example.com"/>
+        </div>
+        <div class="form-group">
+          <label>Membership Plan *</label>
+          <select id="m-plan">
+            <option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Emergency Contact</label>
+          <input type="text" id="m-emergency" placeholder="Name & Phone"/>
+        </div>
+        <div class="form-group">
+          <label>Fitness Goal</label>
+          <input type="text" id="m-goal" placeholder="e.g. Weight loss"/>
+        </div>
+        <div class="form-group full">
+          <label>Medical Conditions</label>
+          <textarea id="m-medical" placeholder="Any known medical conditions or allergies..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('member-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addMember()">Register Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">RECORD PAYMENT</div>
+      <button class="modal-close" onclick="closeModal('payment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Member Name *</label>
+          <input type="text" id="p-name" placeholder="Member name"/>
+        </div>
+        <div class="form-group">
+          <label>Plan *</label>
+          <select id="p-plan">
+            <option>Daily — ₦1,500</option><option>Weekly — ₦5,000</option>
+            <option>Monthly — ₦12,000</option><option>Yearly — ₦100,000</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Amount (₦) *</label>
+          <input type="number" id="p-amount" placeholder="e.g. 12000"/>
+        </div>
+        <div class="form-group">
+          <label>Payment Method *</label>
+          <select id="p-method">
+            <option>Cash</option><option>Card</option>
+            <option>Mobile Money</option><option>Bank Transfer</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <input type="text" id="p-notes" placeholder="Optional notes..."/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('payment-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addPayment()">Record Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Equipment Modal -->
+<div class="modal-overlay" id="equipment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ADD EQUIPMENT</div>
+      <button class="modal-close" onclick="closeModal('equipment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Equipment Name *</label>
+          <input type="text" id="eq-name" placeholder="e.g. Treadmill"/>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="eq-cat">
+            <option>Cardio</option><option>Strength</option>
+            <option>Flexibility</option><option>Free Weights</option><option>Accessories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity *</label>
+          <input type="number" id="eq-qty" placeholder="e.g. 4" min="1"/>
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="eq-cond">
+            <option>Excellent</option><option>Good</option>
+            <option>Fair</option><option>Needs Repair</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="eq-loc" placeholder="e.g. Floor A, Zone 2"/>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="eq-status">
+            <option>Available</option><option>In Use</option>
+            <option>Under Maintenance</option><option>Retired</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('equipment-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addEquipment()">Add Equipment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ADD STORE PRODUCT</div>
+      <button class="modal-close" onclick="closeModal('product-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="pr-name" placeholder="e.g. Resistance Bands Set"/>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="pr-cat">
+            <option>Gym Wear</option><option>Supplements</option>
+            <option>Accessories</option><option>Equipment</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (₦) *</label>
+          <input type="number" id="pr-price" placeholder="e.g. 5000"/>
+        </div>
+        <div class="form-group">
+          <label>Stock Quantity *</label>
+          <input type="number" id="pr-stock" placeholder="e.g. 20"/>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="pr-desc" placeholder="Short product description..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('product-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA STORE ───
+let members = [
+  { id:'MBR-001', name:'Nwokolo Precious', plan:'Monthly', status:'Active', checkins:28, joined:'2025-01-10' },
+  { id:'MBR-002', name:'Olalekan Adeyemi', plan:'Yearly', status:'Active', checkins:45, joined:'2024-11-20' },
+  { id:'MBR-003', name:'Tunde Fashola', plan:'Weekly', status:'Expired', checkins:8, joined:'2025-04-01' },
+  { id:'MBR-004', name:'Okpe Confidence', plan:'Monthly', status:'Active', checkins:19, joined:'2025-02-14' },
+  { id:'MBR-005', name:'Usiju Meduju', plan:'Daily', status:'Pending', checkins:2, joined:'2025-05-15' },
+];
+
+let payments = [
+  { id:'TXN-001', member:'Nwokolo Precious', plan:'Monthly', amount:12000, method:'Card', status:'Completed', date:'2025-05-01' },
+  { id:'TXN-002', member:'Olalekan Adeyemi', plan:'Yearly', amount:100000, method:'Bank Transfer', status:'Completed', date:'2025-04-20' },
+  { id:'TXN-003', member:'Tunde Fashola', plan:'Weekly', amount:5000, method:'Cash', status:'Completed', date:'2025-04-28' },
+  { id:'TXN-004', member:'Nelson Charles', plan:'Monthly', amount:12000, method:'Mobile Money', status:'Pending', date:'2025-05-10' },
+];
+
+let equipment = [
+  { id:'EQ-01', name:'Treadmill', icon:'🏃', category:'Cardio', qty:4, condition:'Good', status:'Available', location:'Floor A' },
+  { id:'EQ-02', name:'Bench Press', icon:'🏋️', category:'Strength', qty:6, condition:'Excellent', status:'In Use', location:'Floor B' },
+  { id:'EQ-03', name:'Rowing Machine', icon:'🚣', category:'Cardio', qty:2, condition:'Good', status:'Available', location:'Floor A' },
+  { id:'EQ-04', name:'Dumbbells Set', icon:'💪', category:'Free Weights', qty:20, condition:'Good', status:'Available', location:'Floor C' },
+  { id:'EQ-05', name:'Cycling Bike', icon:'🚴', category:'Cardio', qty:5, condition:'Fair', status:'Under Maintenance', location:'Floor A' },
+  { id:'EQ-06', name:'Pull-up Bar', icon:'⬆️', category:'Strength', qty:4, condition:'Excellent', status:'Available', location:'Floor B' },
+];
+
+let products = [
+  { id:'PRD-001', name:'Protein Whey 1kg', icon:'🥛', category:'Supplements', price:8500, stock:30, desc:'Premium whey protein blend' },
+  { id:'PRD-002', name:'Gym Gloves', icon:'🧤', category:'Accessories', price:2500, stock:50, desc:'Anti-slip lifting gloves' },
+  { id:'PRD-003', name:'Resistance Bands', icon:'🔴', category:'Accessories', price:1800, stock:40, desc:'Set of 5 resistance levels' },
+  { id:'PRD-004', name:'IronCore Hoodie', icon:'👕', category:'Gym Wear', price:7000, stock:25, desc:'Premium cotton blend hoodie' },
+  { id:'PRD-005', name:'Jump Rope', icon:'➰', category:'Equipment', price:1200, stock:60, desc:'Speed skipping rope' },
+  { id:'PRD-006', name:'Water Bottle 1L', icon:'💧', category:'Accessories', price:2000, stock:8, desc:'BPA-free insulated bottle' },
+];
+
+let orders = [
+  { id:'ORD-001', member:'Ngozi Adeyemi', product:'Gym Gloves', qty:2, total:5000, status:'Delivered', date:'2025-05-02' },
+  { id:'ORD-002', member:'Emeka Eze', product:'Protein Whey 1kg', qty:1, total:8500, status:'Shipped', date:'2025-05-10' },
+  { id:'ORD-003', member:'Chioma Nwosu', product:'IronCore Hoodie', qty:1, total:7000, status:'Pending', date:'2025-05-14' },
+];
+
+let memberCounter = 248;
+let txnCounter = 5;
+let eqCounter = 7;
+let prdCounter = 7;
+let currentPage = 'dashboard';
+
+// ─── NAVIGATION ───
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = {
+    dashboard:'DASHBOARD', members:'MEMBER MANAGEMENT',
+    payments:'PAYMENTS & SUBSCRIPTIONS', security:'DATA & SECURITY',
+    equipment:'EQUIPMENT MANAGEMENT', store:'ONLINE GYM STORE'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || page.toUpperCase();
+  currentPage = page;
+  renderAll();
+  closeSidebar();
+}
+
+function showCurrentModal() {
+  const map = {
+    members: 'member-modal', payments: 'payment-modal',
+    equipment: 'equipment-modal', store: 'product-modal'
+  };
+  if (map[currentPage]) openModal(map[currentPage]);
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ─── MODAL ───
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(mo => {
+  mo.addEventListener('click', e => { if (e.target === mo) mo.classList.remove('open'); });
+});
+
+// ─── ALERT ───
+function showAlert(msg, type='success') {
+  const a = document.getElementById('alert');
+  a.className = `alert alert-${type} show`;
+  a.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
+  setTimeout(() => a.classList.remove('show'), 3500);
+}
+
+// ─── RENDER ───
+function renderAll() {
+  renderMembers();
+  renderPayments();
+  renderEquipment();
+  renderStore();
+  renderOrders();
+  document.getElementById('dash-members').textContent = members.length;
+}
+
+function renderMembers(data) {
+  const rows = data || members;
+  const tbody = document.getElementById('members-tbody');
+  tbody.innerHTML = rows.map(m => `
+    <tr>
+      <td><span style="font-family:var(--font-mono);color:var(--accent3)">${m.id}</span></td>
+      <td><strong>${m.name}</strong></td>
+      <td><span class="badge badge-${m.plan.toLowerCase()}">${m.plan}</span></td>
+      <td><span class="badge badge-${m.status.toLowerCase()}">${m.status}</span></td>
+      <td>${m.checkins}</td>
+      <td>${m.joined}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="suspendMember('${m.id}')">Suspend</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMember('${m.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderPayments() {
+  const tbody = document.getElementById('payments-tbody');
+  tbody.innerHTML = payments.map(p => `
+    <tr>
+      <td><span style="font-family:var(--font-mono);color:var(--accent3)">${p.id}</span></td>
+      <td>${p.member}</td>
+      <td>${p.plan}</td>
+      <td style="font-family:var(--font-mono);color:var(--success)">₦${Number(p.amount).toLocaleString()}</td>
+      <td>${p.method}</td>
+      <td><span class="badge badge-${p.status === 'Completed' ? 'active' : 'pending'}">${p.status}</span></td>
+      <td>${p.date}</td>
+    </tr>
+  `).join('');
+}
+
+function renderEquipment() {
+  const statusColors = { Available: 'success', 'In Use': 'accent3', 'Under Maintenance': 'warning', Retired: 'text-muted' };
+  document.getElementById('equip-grid').innerHTML = equipment.map(e => `
+    <div class="equip-card">
+      <div class="equip-icon">${e.icon}</div>
+      <div class="equip-name">${e.name}</div>
+      <div class="equip-detail">${e.category} · ${e.location} · Qty: ${e.qty}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="badge badge-${e.condition === 'Excellent' ? 'active' : e.condition === 'Needs Repair' ? 'expired' : 'pending'}" style="font-size:9px">${e.condition}</span>
+        <span style="font-size:11px;color:var(--${statusColors[e.status] || 'text-muted'})">${e.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStore() {
+  const catIcons = { 'Gym Wear':'👕', Supplements:'🥤', Accessories:'🎒', Equipment:'🏋️' };
+  document.getElementById('store-grid').innerHTML = products.map(p => `
+    <div class="product-card">
+      <div class="product-img">${p.icon}</div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+          <div>
+            <span class="product-stock ${p.stock < 10 ? 'style="color:var(--danger)"' : ''}">Stock: ${p.stock}</span>
+            <button class="btn btn-primary btn-sm" style="margin-left:8px" onclick="buyProduct('${p.id}')">Buy</button>
+          </div>
+        </div>
+        ${p.stock < 10 ? `<div style="font-size:10px;color:var(--warning);margin-top:6px">⚠️ Low stock alert</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderOrders() {
+  const tbody = document.getElementById('orders-tbody');
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td><span style="font-family:var(--font-mono);color:var(--accent3)">${o.id}</span></td>
+      <td>${o.member}</td>
+      <td>${o.product}</td>
+      <td>${o.qty}</td>
+      <td style="font-family:var(--font-mono)">₦${Number(o.total).toLocaleString()}</td>
+      <td><span class="badge badge-${o.status.toLowerCase()}">${o.status}</span></td>
+      <td>${o.date}</td>
+    </tr>
+  `).join('');
+}
+
+// ─── ACTIONS ───
+function addMember() {
+  const name = document.getElementById('m-name').value.trim();
+  const phone = document.getElementById('m-phone').value.trim();
+  if (!name || !phone) { showAlert('Please fill in required fields.', 'error'); return; }
+  // Duplicate check
+  if (members.find(m => m.name.toLowerCase() === name.toLowerCase())) {
+    showAlert('⚠️ Duplicate detected — member may already exist.', 'error'); return;
+  }
+  const plan = document.getElementById('m-plan').value;
+  const newMember = {
+    id: `MBR-${String(memberCounter).padStart(3,'0')}`,
+    name, plan, status: 'Active', checkins: 0,
+    joined: new Date().toISOString().split('T')[0]
+  };
+  memberCounter++;
+  members.push(newMember);
+  closeModal('member-modal');
+  renderMembers();
+  addAuditLog(`Member ${newMember.id} created — ${name} registered`, 'success');
+  showAlert(`Member ${name} registered successfully with ID ${newMember.id}`);
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-phone').value = '';
+}
+
+function deleteMember(id) {
+  if (!confirm(`⚠️ CONFIRM: Permanently delete member ${id}? This cannot be undone.`)) return;
+  members = members.filter(m => m.id !== id);
+  renderMembers();
+  addAuditLog(`Member ${id} deleted by Admin`, 'danger');
+  showAlert(`Member ${id} has been removed.`);
+}
+
+function suspendMember(id) {
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+  if (!confirm(`Suspend member ${id} — ${m.name}?`)) return;
+  m.status = 'Suspended';
+  renderMembers();
+  addAuditLog(`Member ${id} suspended by Admin`, 'warning');
+  showAlert(`Member ${m.name} has been suspended.`);
+}
+
+function addPayment() {
+  const name = document.getElementById('p-name').value.trim();
+  const amount = document.getElementById('p-amount').value;
+  if (!name || !amount) { showAlert('Fill in required fields.', 'error'); return; }
+  const plan = document.getElementById('p-plan').value.split(' — ')[0];
+  const method = document.getElementById('p-method').value;
+  const newTxn = {
+    id: `TXN-${String(txnCounter).padStart(3,'0')}`,
+    member: name, plan, amount: Number(amount),
+    method, status: 'Completed',
+    date: new Date().toISOString().split('T')[0]
+  };
+  txnCounter++;
+  payments.unshift(newTxn);
+  closeModal('payment-modal');
+  renderPayments();
+  addAuditLog(`Payment ${newTxn.id} recorded — ₦${Number(amount).toLocaleString()} from ${name}`, 'accent');
+  showAlert(`Payment of ₦${Number(amount).toLocaleString()} recorded for ${name}.`);
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-amount').value = '';
+}
+
+function addEquipment() {
+  const name = document.getElementById('eq-name').value.trim();
+  const qty = document.getElementById('eq-qty').value;
+  if (!name || !qty) { showAlert('Fill in required fields.', 'error'); return; }
+  const icons = { Cardio:'🏃', Strength:'🏋️', Flexibility:'🧘', 'Free Weights':'💪', Accessories:'🔧' };
+  const cat = document.getElementById('eq-cat').value;
+  const newEq = {
+    id: `EQ-${String(eqCounter).padStart(2,'0')}`,
+    name, icon: icons[cat] || '⚙️',
+    category: cat, qty: Number(qty),
+    condition: document.getElementById('eq-cond').value,
+    status: document.getElementById('eq-status').value,
+    location: document.getElementById('eq-loc').value || 'Unassigned'
+  };
+  eqCounter++;
+  equipment.push(newEq);
+  closeModal('equipment-modal');
+  renderEquipment();
+  addAuditLog(`Equipment ${newEq.id} added — ${name} (${cat})`, 'accent3');
+  showAlert(`${name} added to equipment inventory.`);
+  document.getElementById('eq-name').value = '';
+  document.getElementById('eq-qty').value = '';
+}
+
+function addProduct() {
+  const name = document.getElementById('pr-name').value.trim();
+  const price = document.getElementById('pr-price').value;
+  const stock = document.getElementById('pr-stock').value;
+  if (!name || !price || !stock) { showAlert('Fill in required fields.', 'error'); return; }
+  const cat = document.getElementById('pr-cat').value;
+  const catIcons = { 'Gym Wear':'👕', Supplements:'🥤', Accessories:'🎒', Equipment:'🏋️' };
+  const newPrd = {
+    id: `PRD-${String(prdCounter).padStart(3,'0')}`,
+    name, icon: catIcons[cat] || '📦',
+    category: cat, price: Number(price), stock: Number(stock),
+    desc: document.getElementById('pr-desc').value || 'No description.'
+  };
+  prdCounter++;
+  products.push(newPrd);
+  closeModal('product-modal');
+  renderStore();
+  addAuditLog(`Product ${newPrd.id} added to store — ${name}`, 'accent');
+  showAlert(`${name} added to the store.`);
+  document.getElementById('pr-name').value = '';
+  document.getElementById('pr-price').value = '';
+  document.getElementById('pr-stock').value = '';
+}
+
+function buyProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  if (p.stock <= 0) { showAlert('This product is out of stock!', 'error'); return; }
+  const member = prompt(`Enter member name for order of "${p.name}":`);
+  if (!member) return;
+  p.stock--;
+  const newOrder = {
+    id: `ORD-${String(orders.length + 1).padStart(3,'0')}`,
+    member, product: p.name, qty: 1, total: p.price,
+    status: 'Pending',
+    date: new Date().toISOString().split('T')[0]
+  };
+  orders.unshift(newOrder);
+  renderStore();
+  renderOrders();
+  addAuditLog(`Order ${newOrder.id} placed by ${member} — ${p.name}`, 'accent');
+  showAlert(`Order placed for ${p.name}! Order ID: ${newOrder.id}`);
+}
+
+// ─── AUDIT LOG ───
+function addAuditLog(text, color) {
+  const log = document.getElementById('audit-log');
+  const colors = { success: 'var(--success)', accent: 'var(--accent)', accent3: 'var(--accent3)', warning: 'var(--warning)', danger: 'var(--danger)' };
+  const now = new Date();
+  const time = now.toTimeString().split(' ')[0];
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<div class="log-dot" style="background:${colors[color] || 'var(--text-muted)'}"></div><div class="log-time">${time}</div><div class="log-event">${text}</div>`;
+  log.insertBefore(entry, log.firstChild);
+}
+
+// ─── SEARCH ───
+function handleSearch() {
+  const q = document.getElementById('globalSearch').value.toLowerCase();
+  if (currentPage === 'members') {
+    renderMembers(members.filter(m =>
+      m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q) || m.plan.toLowerCase().includes(q)
+    ));
+  }
+}
+
+// ─── INIT ───
+renderAll();
+</script>
+</body>
+</html>
